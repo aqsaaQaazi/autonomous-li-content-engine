@@ -1,0 +1,344 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "ee8bfa16-6d36-4e07-b2e6-c68a984eaed9",
+      "name": "When clicking Execute",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        -224
+      ],
+      "alwaysOutputData": true,
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "=openai/gpt-oss-120b",
+        "prompt": {
+          "messages": [
+            {
+              "content": "=You are an expert LinkedIn Content Strategist. Your writing style is engaging, minimalist, high-impact, and easy to read.\n\nSTRICT RULES:\n\nNO yellow face emojis (e.g., 😂, 🙌, 🤔). Use professional Unicode symbols like (→, •, ■, ➜, ⚡) for bullets or only if necessary.\n\nUse very short paragraphs (max 2 sentences per paragraph).\n\nUse bullet points for key takeaways.\n\nLanguage: Simplified, conversational English. Avoid \"corporate jargon.\" \n\nTone: politely Professional yet approachable. \n\nFormatting: Use plenty of white space between sections.\n\nUser Prompt:\nTopic:{{ $json.choices[0].message.content }}\n\nWrite a LinkedIn post about this topic.\n\nStart with a strong \"hook\" (the first line should make people click 'see more').\n\nthere should be a sub/semi hook inn the next.\n\nInclude 3-4 bullet points using the '•' symbol.\n\nEnd with a subtle call to action (CTA) or a relative to post thought-provoking question.\nor maybe a call for connecting.\n\nEnsure the post is clean and avoid emoji overuse."
+            }
+          ]
+        },
+        "simplifyOutput": false,
+        "options": {},
+        "requestOptions": {}
+      },
+      "id": "1097f3e7-9957-4bc9-9321-12040afc0153",
+      "name": "Generate LinkedIn Post",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -128
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "5iiC3dKhHyXuBw67",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://image.pollinations.ai/prompt/{{ $json.choices[0].message.content.replace(/[^a-zA-Z0-9 ]/g, \"\").trim().replace(/\\s+/g, \"%20\") }}?width=1080&height=1080&nologo=true",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          },
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "6bf1309a-bcbd-4f3f-8880-a023b830f4c2",
+      "name": "Generate AI Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1008,
+        -128
+      ]
+    },
+    {
+      "parameters": {
+        "person": "4mXBQtFsVP",
+        "text": "={{ $('Generate LinkedIn Post').item.json.choices[0].message.content }}",
+        "shareMediaCategory": "IMAGE",
+        "additionalFields": {}
+      },
+      "id": "ea7d84fe-fe38-4430-829a-f611559f3394",
+      "name": "Post to LinkedIn",
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        1232,
+        -128
+      ],
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "1DSvXB96WnpDaXgu",
+          "name": "LinkedIn account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d0ff6e8b-abc7-410c-915c-9a1845fb39df",
+              "name": "post_title",
+              "value": "My LinkedIn is officially on Autopilot. 🤖  Hook Line: \"You’re looking at my very first post, and here’s a secret: I didn’t write a single word of it.\"  Why it works: Ye logon ko \"See more\" click karne par majboor karta hai kyunki har koi automation seekhna chahta hai.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        112,
+        -128
+      ],
+      "id": "9816c3e1-0a00-4cce-8857-c6d35f156d10",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "=openai/gpt-oss-120b",
+        "prompt": {
+          "messages": [
+            {
+              "content": "=Create a very short, visual prompt for: {{ $json.choices[0].message.content }} Crucially, discreetly add a small watermark text somewhere reading 'Aqsaa Qaazi' in the image. Make it elegant and professional.\nRules: NO commas, NO dashes, NO periods. Just simple keywords. Minimalist style"
+            }
+          ]
+        },
+        "simplifyOutput": false,
+        "options": {},
+        "requestOptions": {}
+      },
+      "id": "bf7ea636-fc84-4029-80d4-249a77af2436",
+      "name": "generate post description.",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        784,
+        -128
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "5iiC3dKhHyXuBw67",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "=openai/gpt-oss-120b",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a strategic Content Creator for a Full Stack Web Developer who specializes in website development, AI Integrations and E-commerce. Your goal is to generate 1 high-value LinkedIn post topic that positions the user as an expert.  Focus Areas:  How AI chatbots increase sales in E-commerce.  Full-stack development tips (React, Node.js, Next.js).  Integrating LLMs into existing web applications.  Automation to save business costs. in simple and readable english"
+            },
+            {
+              "content": "Generate 1 specific, engaging LinkedIn post topic.  Avoid generic titles like \"What is AI.\",  \"How-to\" or \"The future of [Field].\"  Output only the topic title in one line. no narrations and no fluff."
+            }
+          ]
+        },
+        "simplifyOutput": false,
+        "options": {},
+        "requestOptions": {}
+      },
+      "id": "a0edb197-91df-45fe-b6ac-ebc07843d5c3",
+      "name": "Idea generator",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        336,
+        -128
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "5iiC3dKhHyXuBw67",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 3,
+              "triggerAtHour": 19,
+              "triggerAtMinute": null
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -112,
+        -32
+      ],
+      "id": "67fc7375-36e3-4bf0-a100-4d78a33f8a00",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pushbullet.com/v2/pushes",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "type",
+              "value": "note"
+            },
+            {
+              "name": "title",
+              "value": "🚀 LinkedIn Post Live!"
+            },
+            {
+              "name": "body",
+              "value": "=Post successful for topic:\"{{ $('Idea generator').item.json.choices[0].message.content }}    post: {{ $('Generate LinkedIn Post').item.json.choices[0].message.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1456,
+        -128
+      ],
+      "id": "8e5b68a5-42b4-4131-bdf2-cd403e26536a",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "QpvhkHbSXQANqaA1",
+          "name": "Header Auth account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking Execute": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate LinkedIn Post": {
+      "main": [
+        [
+          {
+            "node": "generate post description.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate AI Image": {
+      "main": [
+        [
+          {
+            "node": "Post to LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Idea generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generate post description.": {
+      "main": [
+        [
+          {
+            "node": "Generate AI Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Idea generator": {
+      "main": [
+        [
+          {
+            "node": "Generate LinkedIn Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to LinkedIn": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9a46bdce-4a08-4926-aac1-b736a27c9b0d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "43ecdd2285ec0d64e5dc759929b39e5cace6c09ccda421f1bfd84e89498efbef"
+  },
+  "id": "hSHbuW9flMiqGt3X",
+  "tags": []
+}

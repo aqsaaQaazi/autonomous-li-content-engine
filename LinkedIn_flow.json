@@ -1,0 +1,536 @@
+{
+  "name": "LinkedIn-automation",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "ee8bfa16-6d36-4e07-b2e6-c68a984eaed9",
+      "name": "When clicking Execute",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        -80
+      ],
+      "alwaysOutputData": true,
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "=openai/gpt-oss-120b",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "=You are a Master Ghostwriter for LinkedIn, specializing in the \"Digital Minimalism\" writing style. Your goal is to turn complex tech topics into high-signal, low-noise posts.\n\nWRITING FRAMEWORK:\n\nThe Tension: Start with a sharp problem (small businesses/developers relate to - could be solved), a myth, or a hard truth.\n\nThe Bridge: Connect that tension to a practical solution or insight.\n\nThe Proof: Use bullet points to show \"How\" and \"Why\".\n\nThe Departure: End with a sharp, one-line closing thought. and a CTA.\n\nSTRICT GUIDELINES:\n\nVisuals: Use Faceless/object Emojis only. (e,g 🎀,✨,👀,🌻,🔥,💎,💸,🥂,🍒,🌸,💐,🥀,🌷,🌺,🍂,🪐,🌝,🌚,⚡,🌊,🤍) \n\nDo NOT use emojis at the end of every sentence like a period. Only use 1-2 relative emojis in the entire post to highlight a \"key vibe\" or \"major transition.\n\nuse unicode symbols for bullets and stuff, choose one for a set of points, dont mix them all (→, ⚡, •)\n\nStructure: Max 2-3 short sentences per paragraph. Use double line breaks for maximum white space.\n\nVocabulary: Use \"simply Plain English.\" Replace words like \"Leverage\" with \"Use,\" \"Revolutionize\" with \"Change,\" and \"Synergy\" with \"Work together.\"\n\nFormat: Output ONLY raw, plain text. No Markdown (no bolding, no italics, no code blocks)."
+            },
+            {
+              "content": "=Write a LinkedIn post based on this Topic: {{ $json.choices[0].message.content }}\n\nCONTENT REQUIREMENTS:\n\nLine 1 (The Hook): Must be under 10 words. It should challenge the status quo.\n\nLine 2 (Sub-hook): Provide a \"Reason to keep reading.\"\n\nBody: Explain the core insight of the topic in 2-3 short paragraphs, Why does this matter for a business or a developer?\n\nparagraph 1: the actual problem with why and how does the reader relate to it.\n\nparagraph 2: the cause of the problem. described.\n\nparagraph 3: how it could be solved + solution. \n\nTakeaways: Provide 3 specific bullet points. Use the SAME symbol for all three bullets. No mixing. Each bullet must provide a \"Value Add\" (not just generic info).\n\nClosing: A thought-provoking question or a direct invitation to connect.\n\nSTRICT OUTPUT RULE: > Do not use any markdown formatting like bold or ## headers. Use emojis sparingly—only where they truly add value. otherwise Just plain, clean text. "
+            },
+            {
+              "role": "assistant",
+              "content": "=Your search speed is killing your conversion rate.\n\nA 1-second delay feels like an eternity to a customer.\n\nUsing Redis for vector search changes the game by bringing latency down to sub-100ms. ⚡\n\nHere is why it works:\n\n• It eliminates the network round-trip between databases.\n• It combines in-memory speed with native vector operations.\n• It simplifies your stack into a single source of truth.\n\nBetter tech isn't about complexity. It's about removing friction.\n\nAre you still letting slow search cost you sales?\nLet’s connect."
+            },
+            {
+              "role": "assistant",
+              "content": "=Most AI chatbots are just expensive FAQ pages.\n\nThey frustrate users and kill conversion rates.\n\nHere is how I build them differently:\n\n• Context-aware memory mapping.\n• 1.2s latency response limits.\n• Direct API handovers for complex queries.\n\nBetter tech doesn't mean more features. It means less friction.\n\nAre you building for utility or just for the hype?\nLet’s connect."
+            }
+          ]
+        },
+        "simplifyOutput": false,
+        "options": {},
+        "requestOptions": {}
+      },
+      "id": "1097f3e7-9957-4bc9-9321-12040afc0153",
+      "name": "Generate LinkedIn Post",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        560,
+        16
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "5iiC3dKhHyXuBw67",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "person": "4mXBQtFsVP",
+        "text": "={{ $('Generate LinkedIn Post').item.json.choices[0].message.content }}",
+        "shareMediaCategory": "IMAGE",
+        "additionalFields": {}
+      },
+      "id": "ea7d84fe-fe38-4430-829a-f611559f3394",
+      "name": "Post to LinkedIn",
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        2128,
+        16
+      ],
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "1DSvXB96WnpDaXgu",
+          "name": "LinkedIn account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d0ff6e8b-abc7-410c-915c-9a1845fb39df",
+              "name": "post_title",
+              "value": "My LinkedIn is officially on Autopilot. 🤖  Hook Line: \"You’re looking at my very first post, and here’s a secret: I didn’t write a single word of it.\" ",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        112,
+        16
+      ],
+      "id": "9816c3e1-0a00-4cce-8857-c6d35f156d10",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "=openai/gpt-oss-120b",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "=You are a prompt engineering expert for high-end AI image generators like Flux and Midjourney. Your goal is to translate LinkedIn post content into a relative to topic professional style visual prompt.\n\nVISUAL STYLE GUIDE:\n\n\nAESTHETICS: Modern high-end 8k relative to post topic art. Clean lines. Sophisticated dark and light contrast. Minimalist composition. Cinematic lighting. soft shadows, neutral & muted tones (whites, grays, emerald green accents), glass textures, and futuristic.\n\nLighting: Cinematic soft lighting, studio setup, 8k resolution.\n\nMood: Calm, premium, and sophisticated.\n\nSTRICT OUTPUT RULES:\n\nthe output prompt must be relative to post/post-topic and match the vibe and feel of the post, \n\nOutput ONLY raw keywords.\n\nNO punctuation (no commas, periods, or dashes).\n\nNO conversational filler (\"Here is your prompt\").\n\nAll words must be in a single line separated by spaces."
+            },
+            {
+              "content": "=write a Visual prompt for this LinkedIn post, \n\nuse this post content for reference of a visual prompt: {{ $json.choices[0].message.content }}  \n\nInclude keywords for: \nThe core tech subject. \nstyle.  \nCamera angle.  \nLighting.  \nOutput only the keywords.\n\nthe output must be of different settings each time."
+            }
+          ]
+        },
+        "simplifyOutput": false,
+        "options": {},
+        "requestOptions": {}
+      },
+      "id": "bf7ea636-fc84-4029-80d4-249a77af2436",
+      "name": "generate post description.",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        784,
+        16
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "5iiC3dKhHyXuBw67",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "openai/gpt-oss-120b",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "=You are a Strategic Content Architect for a Senior Full-Stack Developer and Expert IN AI inteerations. Your task is to generate ONE hyper-specific, high-authority LinkedIn topic.\n\nCORE TOPIC PILLARS:\n\nAI Strategy, Real-world AI integration (for small business, data).\nDev Performance. Advanced IDE hacks (VS Code extensions for AI, Terminal automation) set of terminal commands for (cmd, PS, Mac) or Architecture decisions (Next.js vs. Remix).\nConversion Engineering, Chatbots/UI-UX E-commerce.\n\nWRITING CONSTRAINTS:\n\nNO fluff, NO generic buzzwords like \"Revolutionary\" or \"Game-changing.\"\n\nNO \"How-to\" style titles.\n\nFocus on \"Opinionated Tech\" (e.g., Why X is actually better than Y for production).\n\nTarget Audience: CTOs, Founders, and Senior Developers."
+            },
+            {
+              "content": "=Generate ONE unique LinkedIn post topic.\n\nCRITICAL FILTERS:\n\nThe topic must solve a specific \"Pain Point\" that actually exists.\n\nIt must hold a \"Strong Opinion\".\n\nEnsure it is an intermediate level topic, NOT a beginner-level topic.\n\nOUTPUT FORMAT:\n\nOutput ONLY the title/topic in one single line.\n\nNO introductory text, NO quotes, NO hashtags."
+            },
+            {
+              "role": "assistant",
+              "content": "My LinkedIn is officially on Autopilot. 🤖 Hook Line: \"You’re looking at my very first post, and here’s a secret: I didn’t write a single word of it.\""
+            }
+          ]
+        },
+        "simplifyOutput": false,
+        "options": {
+          "temperature": 0.7
+        },
+        "requestOptions": {}
+      },
+      "id": "a0edb197-91df-45fe-b6ac-ebc07843d5c3",
+      "name": "Idea generator",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        336,
+        16
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "5iiC3dKhHyXuBw67",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 3,
+              "triggerAtHour": 23,
+              "triggerAtMinute": {}
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -112,
+        112
+      ],
+      "id": "67fc7375-36e3-4bf0-a100-4d78a33f8a00",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c0c613bf-3771-4f52-81c3-36065b9bbb10",
+              "leftValue": "={{ $binary.data.fileExtension }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1232,
+        16
+      ],
+      "id": "f5fc6a10-8eb9-48ac-9049-a592b1b697e1",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "=https://image.pollinations.ai/prompt/{{ $json.choices[0].message.content.replace(/[^a-zA-Z0-9 ]/g, \"\").trim().replace(/\\s+/g, \"%20\") }}?width=1080&height=1080&nologo=true&model=flux",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "c188e60c-8322-4bd7-9f36-f8a054bba931",
+      "name": "image poll-flux",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1456,
+        88
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 3000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://image.pollinations.ai/prompt/{{ $json.choices[0].message.content.replace(/[^a-zA-Z0-9 ]/g, \"\").trim().replace(/\\s+/g, \"%20\") }}?width=1080&height=1080&nologo=true",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "6bf1309a-bcbd-4f3f-8880-a023b830f4c2",
+      "name": "image poll-sana",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1904,
+        160
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 3000
+    },
+    {
+      "parameters": {
+        "url": "=https://image.pollinations.ai/prompt/{{ $json.choices[0].message.content.replace(/[^a-zA-Z0-9 ]/g, \"\").trim().replace(/\\s+/g, \"%20\") }}?width=1080&height=1080&nologo=true&model=pvt",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "e71900bb-eebb-4f83-916c-d7274545e124",
+      "name": "Image poll-pvt",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1008,
+        16
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 3000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c0c613bf-3771-4f52-81c3-36065b9bbb10",
+              "leftValue": "={{ $binary.data.fileExtension }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1680,
+        160
+      ],
+      "id": "90645770-cae0-4f29-9c4e-0ef0af29c111",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://textbelt.com/text",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"phone\": \"+923249257725\",\n  \"message\": \"LinkedIn post published.\",\n  \"key\": \"textbelt\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2352,
+        16
+      ],
+      "id": "46659d64-55c0-47fc-8c11-e74ec5c581a1",
+      "name": "HTTP Request1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking Execute": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate LinkedIn Post": {
+      "main": [
+        [
+          {
+            "node": "generate post description.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Idea generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generate post description.": {
+      "main": [
+        [
+          {
+            "node": "Image poll-pvt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Idea generator": {
+      "main": [
+        [
+          {
+            "node": "Generate LinkedIn Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to LinkedIn": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Post to LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "image poll-flux",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "image poll-flux": {
+      "main": [
+        [
+          {
+            "node": "Post to LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "image poll-sana": {
+      "main": [
+        [
+          {
+            "node": "Post to LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image poll-pvt": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "image poll-sana",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "image poll-sana",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "58b77d46-8531-4aa6-ac37-b99e434893cf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "43ecdd2285ec0d64e5dc759929b39e5cace6c09ccda421f1bfd84e89498efbef"
+  },
+  "id": "hSHbuW9flMiqGt3X",
+  "tags": []
+}
